@@ -1,0 +1,12 @@
+﻿global using System;
+global using System.Text.Json;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Exp.TodoApp.Domain.Entities;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Design;
+global using Microsoft.Extensions.Configuration;
+global using Exp.TodoApp.Infrastructure.Persistence;
+global using Microsoft.Extensions.DependencyInjection;
+global using Exp.TodoApp.Application.Interfaces.Persistence;
+global using Microsoft.Extensions.Caching.Memory;
+global using Microsoft.AspNetCore.Builder;
