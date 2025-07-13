@@ -12,7 +12,7 @@ public class UpdateTodoCommandHandler(
 
         if (existingRec != null)
         {
-            existingRec.ToDoName = dto.TodoName;
+            Todo todo = Todo.Update(existingRec, dto.TodoName);          
             await writeRepo.UpdateAsync(existingRec);
             return true;
         }

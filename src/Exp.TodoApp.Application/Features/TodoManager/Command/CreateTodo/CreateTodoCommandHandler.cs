@@ -7,14 +7,8 @@ public class UpdateTodoCommandHandler(
     public async Task<int> Handle(CreateTodoCommand request, CancellationToken cancellationToken)
     {
         var dto = request.CreateDto;
-        Todo todo = new();
-
-        if (!string.IsNullOrEmpty(dto.TodoName))
-        {
-            todo.ToDoName = dto.TodoName;
-            await writeRepo.AddAsync(todo);
-            return todo.Id;
-        }
-        return 0;
+        Todo todo = Todo.Create(dto.TodoName);
+        await writeRepo.AddAsync(todo);
+        return todo.Id;        
     }
 }

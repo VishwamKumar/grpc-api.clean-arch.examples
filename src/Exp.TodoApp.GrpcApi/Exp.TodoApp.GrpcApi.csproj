@@ -26,7 +26,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Exp.TodoApp.Application\Exp.TodoApp.Application.csproj" />
-	  <ProjectReference Include="..\Exp.TodoApp.Domain\Exp.TodoApp.Domain.csproj" />
 	  <ProjectReference Include="..\Exp.TodoApp.Infrastructure\Exp.TodoApp.Infrastructure.csproj" />
 	</ItemGroup>
 

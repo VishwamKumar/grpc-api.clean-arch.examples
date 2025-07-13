@@ -15,10 +15,11 @@ global using Exp.TodoApp.Application;
 global using Exp.TodoApp.GrpcApi.Services;
 global using Exp.TodoApp.GrpcApi.Extensions;
 global using Exp.TodoApp.Application.Features.TodoManager.Dtos;
-
+global using Exp.TodoApp.Application.Common.Behaviours;
 global using Exp.TodoApp.Application.Features.TodoManager.Queries.GetAll;
 global using Exp.TodoApp.Application.Features.TodoManager.Queries.GetById;
 global using Exp.TodoApp.Application.Features.TodoManager.Command.CreateTodo;
 global using Exp.TodoApp.Application.Features.TodoManager.Command.UpdateTodo;
 global using Exp.TodoApp.Application.Features.TodoManager.Command.DeleteTodo;
 global using MediatR;
+global using Exp.TodoApp.GrpcApi.Helpers;

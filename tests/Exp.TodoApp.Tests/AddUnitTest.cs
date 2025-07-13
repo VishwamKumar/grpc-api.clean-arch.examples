@@ -1,6 +1,6 @@
 ﻿namespace Exp.TodoApp.Tests;
 
-public class UnitTest1
+public class AddUnitTest
 {
     [Fact]
     public void Test1()

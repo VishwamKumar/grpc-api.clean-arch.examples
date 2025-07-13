@@ -10,7 +10,7 @@ public class TodoConfiguration : IEntityTypeConfiguration<Todo>
         builder.Property(e => e.Id)
        .HasColumnName("Id");
 
-        builder.Property(e => e.ToDoName)
+        builder.Property(e => e.TodoName)
               .HasColumnName("ToDoName")
               .HasMaxLength(100)
               .IsRequired();

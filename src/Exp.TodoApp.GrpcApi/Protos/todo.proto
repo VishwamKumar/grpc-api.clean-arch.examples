@@ -16,10 +16,16 @@ message TodoData {
 }
 
 message StatusData {
-  int32 code = 1;
-  string description = 2;  
+  int32 code = 1; 
+  bool success = 2;
+  string message  = 3; 
+  repeated string errors = 4;
 }
 
+
+// Note: Although some methods could technically share a common request or response type,
+// each method here uses its own dedicated message to promote clarity, maintain separation 
+// of concerns, and reflect distinct intent—even if the structure overlaps.
 
 // ========== Request DTO ==========
 message GetTodoByIdRequest {
