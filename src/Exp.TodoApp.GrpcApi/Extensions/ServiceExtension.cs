@@ -1,4 +1,4 @@
-﻿using Exp.TodoApp.Infrastructure; //only for DI here
+﻿using Exp.TodoApp.Infrastructure.Extensions; //only for DI here
 
 
 namespace Exp.TodoApp.GrpcApi.Extensions;

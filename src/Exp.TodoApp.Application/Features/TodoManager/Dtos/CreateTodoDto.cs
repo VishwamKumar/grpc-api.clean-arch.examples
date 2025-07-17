@@ -2,5 +2,5 @@
 
 public class CreateTodoDto
 {   
-    public string TodoName { get; private set; } = default!;   
+    public string TodoName { get; set; } = default!;   
 }

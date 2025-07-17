@@ -1,5 +1,4 @@
-﻿
-namespace Exp.TodoApp.Infrastructure;
+﻿namespace Exp.TodoApp.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
