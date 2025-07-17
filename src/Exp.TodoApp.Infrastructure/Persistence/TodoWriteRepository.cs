@@ -5,14 +5,19 @@ public class TodoWriteRepository(AppDbContext dbContext) : ITodoWriteRepository
 {
     public async Task<int> AddAsync(Todo todo)
     {
-        dbContext.Todos.Add(todo);
+        await dbContext.Todos.AddAsync(todo);
         await dbContext.SaveChangesAsync();
-        return todo.Id; // assuming Id is auto-generated
+        return todo.Id; 
     }
 
     public async Task<bool> UpdateAsync(Todo todo)
     {
-        dbContext.Todos.Update(todo);
+        var exists = await dbContext.Todos.AnyAsync(x => x.Id == todo.Id);
+        if (!exists) return false;
+
+        dbContext.Todos.Attach(todo);
+        dbContext.Entry(todo).State = EntityState.Modified;
+
         var result = await dbContext.SaveChangesAsync();
         return result > 0;
     }
