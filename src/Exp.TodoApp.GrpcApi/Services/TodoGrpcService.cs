@@ -1,6 +1,3 @@
-
-using Exp.TodoApp.Application.Common.Exceptions;
-
 namespace Exp.TodoApp.GrpcApi.Services;
 
 public class TodoGrpcService(ISender mediator, IMapper mapper, ILogger<TodoGrpcService> logger) : TodoService.TodoServiceBase

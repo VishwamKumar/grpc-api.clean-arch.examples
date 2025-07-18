@@ -1,10 +1,4 @@
-﻿using Exp.TodoApp.Application.Features.TodoManager.Command.CreateTodo;
-using Exp.TodoApp.Application.Features.TodoManager.Dtos;
-using Exp.TodoApp.Application.Interfaces.Persistence;
-using Exp.TodoApp.Domain.Common;
-using Exp.TodoApp.Domain.Entities;
-
-namespace Exp.TodoApp.Tests.UnitTests.Application.Commands;
+﻿namespace Exp.TodoApp.Tests.UnitTests.Application.Commands;
 
 public class CreateTodoCommandHandlerTests
 {

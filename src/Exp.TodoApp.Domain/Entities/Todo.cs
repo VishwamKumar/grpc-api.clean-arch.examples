@@ -1,6 +1,4 @@
-﻿using Exp.TodoApp.Domain.Common;
-
-namespace Exp.TodoApp.Domain.Entities;
+﻿namespace Exp.TodoApp.Domain.Entities;
 
 /// <summary>
 /// Note: Validation here may appear redundant since we have FluentValidation in the application layer.

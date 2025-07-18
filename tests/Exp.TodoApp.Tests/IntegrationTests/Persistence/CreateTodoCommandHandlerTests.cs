@@ -1,10 +1,4 @@
-﻿using Exp.TodoApp.Application.Features.TodoManager.Command.CreateTodo;
-using Exp.TodoApp.Application.Features.TodoManager.Dtos;
-using Exp.TodoApp.Application.Interfaces.Persistence;
-using Exp.TodoApp.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-
-namespace Exp.TodoApp.Tests.IntegrationTests.Persistence;
+﻿namespace Exp.TodoApp.Tests.IntegrationTests.Persistence;
 
 public class CreateTodoCommandHandlerTests
 {

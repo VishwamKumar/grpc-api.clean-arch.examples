@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Exp.TodoApp.Application.Common.Behaviours;
+﻿namespace Exp.TodoApp.Application.Common.Behaviours;
 
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
      where TRequest : IRequest<TResponse>
