@@ -7,6 +7,7 @@ A simple yet complete gRPC-based ToDo application built using **Clean Architectu
 # Author
 
 ## Vishwa Kumar
+
 - **Email:** vishwa@vishwa.me
 - **GitHub:** [Vishwam](https://github.com/vishwamkumar)
 - **LinkedIn:** [Vishwa Kumar](https://www.linkedin.com/in/vishwamohan)
@@ -35,6 +36,7 @@ This solution is organized using **Clean Architecture**, with each layer in its 
 - **Entity Framework Core (EF Core)** with **SQLite**
 - **FluentValidation** for request validation
 - **AutoMapper** for object mapping
+- **xUnit** for testing
 
 ---
 
@@ -58,6 +60,7 @@ This solution is organized using **Clean Architecture**, with each layer in its 
 
    
 2. Run the Application
+   
    ```bash
         dotnet run --project src/Exp.TodoApp.GrpcApi
     ```
@@ -80,8 +83,9 @@ This solution is organized using **Clean Architecture**, with each layer in its 
     │   ├── Exp.TodoApp.Infrastructure/
     │   └── Exp.TodoApp.GrpcApi/        <-- API Host (gRPC + Transcoding + Swagger)
     └── tests/
-        └── (optional unit/integration tests)
-
+        └── Exp.TodoApp.Tests/
+            ├── IntegrationTests/
+            └── UnitTests/        
 ---
 
 📌 Notes
