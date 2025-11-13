@@ -1,0 +1,14 @@
+﻿global using MediatR;
+global using AutoMapper;
+global using FluentValidation;
+global using System.Reflection;
+global using Exp.TodoApp.Domain.Entities;
+global using Exp.TodoApp.Domain.Common;
+global using Exp.TodoApp.Application.Features.TodoManager.Dtos;
+global using Exp.TodoApp.Application.Interfaces.Persistence;
+global using Exp.TodoApp.Application.Common.Exceptions;
+global using Exp.TodoApp.Application.Common.Behaviours;
+global using Exp.TodoApp.Application.Features.TodoManager.Command.CreateTodo;
+global using Exp.TodoApp.Application.Features.TodoManager.Command.UpdateTodo;
+global using Exp.TodoApp.Application.Features.TodoManager.Command.DeleteTodo;
+global using Microsoft.Extensions.DependencyInjection;
