@@ -41,7 +41,7 @@ This solution follows Clean Architecture principles with clear separation of con
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- Visual Studio 2022 / VS Code / Rider
+- Visual Studio 2022/6 / VS Code 
 - SQLite (included with .NET)
 
 ### Setup
@@ -310,10 +310,6 @@ dotnet test tests/Exp.TodoApp.Tests
 3. Update documentation
 4. Follow naming conventions
 5. Ensure all tests pass
-
-## 📄 License
-
-[Your License Here]
 
 ## 🙏 Acknowledgments
 
