@@ -1,6 +1,4 @@
-﻿using Exp.TodoApp.Application.Features.TodoManager.Command.DeleteTodo;
-
-namespace Exp.TodoApp.Application.Features.TodoManager.Validators;
+﻿namespace Exp.TodoApp.Application.Features.TodoManager.Validators;
 
 public class DeleteTodoCommandValidator : AbstractValidator<DeleteTodoCommand>
 {

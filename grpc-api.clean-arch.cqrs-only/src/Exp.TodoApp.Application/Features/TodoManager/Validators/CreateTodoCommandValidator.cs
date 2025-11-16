@@ -1,7 +1,4 @@
-﻿
-using Exp.TodoApp.Application.Features.TodoManager.Command.CreateTodo;
-
-namespace Exp.TodoApp.Application.Features.TodoManager.Validators;
+﻿namespace Exp.TodoApp.Application.Features.TodoManager.Validators;
 
 public class CreateTodoCommandValidator : AbstractValidator<CreateTodoCommand>
 {

@@ -1,5 +1,4 @@
-﻿
-namespace Exp.TodoApp.GrpcApi.Extensions;
+﻿namespace Exp.TodoApp.GrpcApi.Extensions;
 
 public static class SwaggerExtension
 {
@@ -26,10 +25,24 @@ public static class SwaggerExtension
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API v1");
         });
-
+    }
+    
+    public static void ConfigureSwaggerEndpoints(this WebApplication app)
+    {
+        bool useSwagger = app.Configuration.GetValue("UseSwagger", false);
+        
+        // Root endpoint - redirect to Swagger if enabled, otherwise show message
         app.MapGet("/", context =>
         {
-            context.Response.Redirect("/swagger");
+            if (useSwagger)
+            {
+                context.Response.Redirect("/swagger");
+            }
+            else
+            {
+                context.Response.ContentType = "text/plain";
+                return context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client.");
+            }
             return Task.CompletedTask;
         });
     }
