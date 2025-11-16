@@ -1,6 +1,6 @@
-# Simple Clean Architecture - Todo App
+# Simple Clean Architecture - Todo App (gRPC API)
 
-This is a **simplified version** of Clean Architecture **without CQRS and without MediatR**.
+This is a **simplified version** of Clean Architecture **without CQRS and without MediatR**, built with **.NET 10.0** and **gRPC**.
 
 ## 🎯 Key Differences from Original
 
@@ -18,7 +18,7 @@ This is a **simplified version** of Clean Architecture **without CQRS and withou
 ## 📁 Architecture
 
 ```
-SimpleCleanArch/
+grpc-api.clean-arch.simple/
 ├── src/
 │   ├── Exp.TodoApp.Domain/          # Domain entities and business logic
 │   ├── Exp.TodoApp.Application/     # Application services, DTOs, validators
@@ -27,9 +27,18 @@ SimpleCleanArch/
 │   │   ├── Validators/              # FluentValidation validators
 │   │   └── Interfaces/              # ITodoRepository interface
 │   ├── Exp.TodoApp.Infrastructure/ # Data persistence
-│   │   └── Persistence/             # TodoRepository implementation
+│   │   ├── Persistence/             # TodoRepository implementation
+│   │   └── Extensions/              # Dependency injection setup
 │   └── Exp.TodoApp.GrpcApi/         # gRPC API layer
-└── Exp.TodoApp.SimpleCleanArch.sln
+│       ├── Services/                 # gRPC service implementations
+│       ├── Protos/                   # Protocol buffer definitions
+│       └── Extensions/               # Service configuration
+├── tests/
+│   └── Exp.TodoApp.Tests/           # Unit and integration tests
+│       ├── UnitTests/               # Unit tests
+│       └── IntegrationTests/        # Integration tests
+├── grpc-api.clean-arch.simple.sln   # Solution file
+└── Dockerfile                        # Docker configuration
 ```
 
 ## 🔄 Request Flow
@@ -43,18 +52,45 @@ SimpleCleanArch/
 
 ## 🚀 Getting Started
 
+### Prerequisites
+- .NET 10.0 SDK or later
+- Docker (optional, for containerized deployment)
+
+### Running the Application
+
 1. **Restore packages**
    ```bash
-   dotnet restore SimpleCleanArch/Exp.TodoApp.SimpleCleanArch.sln
+   dotnet restore grpc-api.clean-arch.simple.sln
    ```
 
 2. **Run the application**
    ```bash
-   dotnet run --project SimpleCleanArch/src/Exp.TodoApp.GrpcApi
+   dotnet run --project src/Exp.TodoApp.GrpcApi
    ```
 
 3. **Test via Swagger**
-   Open browser: `http://localhost:7113/swagger`
+   - Open browser: `http://localhost:7113/swagger` (if Swagger is enabled)
+   - Or use a gRPC client like [Postman](https://www.postman.com/) or [gRPCurl](https://github.com/fullstorydev/grpcurl)
+
+### Running Tests
+
+```bash
+# Run all tests
+dotnet test
+
+# Run tests for specific project
+dotnet test tests/Exp.TodoApp.Tests/Exp.TodoApp.Tests.csproj
+```
+
+### Docker Deployment
+
+```bash
+# Build Docker image
+docker build -t todo-grpc-api .
+
+# Run container
+docker run -p 5000:80 todo-grpc-api
+```
 
 ## 📊 Comparison
 
@@ -82,4 +118,42 @@ SimpleCleanArch/
 - AutoMapper is still used for object mapping
 - Clean Architecture layers are preserved
 - Domain validation remains in the `Todo` entity
+- Uses SQLite database (configured in `appsettings.json`)
+- Database files are excluded from source control (see `.gitignore`)
+
+## 🧪 Testing
+
+The project includes both unit and integration tests:
+- **Unit Tests**: Test application services with mocked dependencies
+- **Integration Tests**: Test repository and database interactions using in-memory database
+
+Test frameworks used:
+- xUnit
+- Moq (for mocking)
+- FluentAssertions (for readable assertions)
+- Microsoft.EntityFrameworkCore.InMemory (for integration tests)
+
+## 🛠️ Technology Stack
+
+- **.NET 10.0** - Framework
+- **gRPC** - API communication protocol
+- **Entity Framework Core 10.0** - ORM
+- **SQLite** - Database
+- **FluentValidation** - Input validation
+- **AutoMapper** - Object mapping
+- **xUnit** - Testing framework
+
+## 📚 Project Structure Details
+
+- **Domain Layer**: Contains entities and domain logic (no dependencies)
+- **Application Layer**: Contains services, DTOs, validators, and interfaces
+- **Infrastructure Layer**: Contains data access implementation (EF Core, repositories)
+- **API Layer**: Contains gRPC services, protocol definitions, and API-specific configurations
+- **Tests**: Contains unit and integration tests organized by layer
+
+## 🔧 Configuration
+
+- Database connection string is configured in `appsettings.json`
+- Swagger can be enabled/disabled via `UseSwagger` setting in `appsettings.json`
+- Environment-specific settings can be added in `appsettings.Development.json`
 
