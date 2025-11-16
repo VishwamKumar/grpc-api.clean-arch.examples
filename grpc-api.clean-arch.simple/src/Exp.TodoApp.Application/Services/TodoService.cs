@@ -22,7 +22,9 @@ public class TodoService : ITodoService
     public async Task<List<TodoDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var todos = await _repository.GetAllAsync(cancellationToken);
-        return _mapper.Map<List<TodoDto>>(todos);
+        return todos != null 
+            ? _mapper.Map<List<TodoDto>>(todos) 
+            : new List<TodoDto>();
     }
 
     public async Task<TodoDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
