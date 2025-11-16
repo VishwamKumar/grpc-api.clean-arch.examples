@@ -5,71 +5,63 @@ public class TodoGrpcService(ITodoService todoService, IMapper mapper, ILogger<T
 
     public override async Task<TodoResponse> GetById(GetTodoByIdRequest request, ServerCallContext context)
     {
-        TodoResponse responseBody = new();
-        StatusData statusData = new() { Success = true, Code=200, Message="Record found." };
         logger.LogInformation("Attempting to Get TodoById: {Id}", request.Id);
 
-        try
+        var todo = await todoService.GetByIdAsync(request.Id, context.CancellationToken);
+       
+        var responseBody = new TodoResponse();
+        if (todo == null)
         {
-            var todo = await todoService.GetByIdAsync(request.Id, context.CancellationToken);
-           
-            if (todo == null)
-            {
-                statusData.Code = 404;
-                statusData.Message = "No record found";
-                responseBody.Status = statusData;
-                return responseBody;
-            }
-            else
-            {
-                TodoData todoData = mapper.Map<TodoData>(todo);              
-                responseBody.Data = todoData;
-                responseBody.Status = statusData;
-                return responseBody;
-            }
+            responseBody.Status = new StatusData 
+            { 
+                Success = false, 
+                Code = 404, 
+                Message = "No record found" 
+            };
+            return responseBody;
         }
-     
-        catch (Exception ex)
-        {
-            throw new RpcException(new Status(StatusCode.Internal, "An unexpected error occurred."), ex.Message);
-        }
+
+        responseBody.Data = mapper.Map<TodoData>(todo);
+        responseBody.Status = new StatusData 
+        { 
+            Success = true, 
+            Code = 200, 
+            Message = "Record found." 
+        };
+        return responseBody;
     }
 
 
     public override async Task<TodoListResponse> GetAll(Empty request, ServerCallContext context)
     {
-        TodoListResponse responseBody = new();
-        StatusData statusData = new() { Success = true, Code = 200, Message = "Record(s) found." };
         logger.LogInformation("Attempting to Get All Todos");
 
-        try
-        {
-            var todos = await todoService.GetAllAsync(context.CancellationToken);
+        var todos = await todoService.GetAllAsync(context.CancellationToken);
 
-            if (todos == null || todos.Count == 0)
+        var responseBody = new TodoListResponse();
+        if (todos == null || todos.Count == 0)
+        { 
+            responseBody.Status = new StatusData 
             { 
-                statusData.Message = "No records found.";
-                responseBody.Status = statusData;
-                return responseBody;
-            }
-            else
-            {
-                responseBody.Data.AddRange(mapper.Map<IEnumerable<TodoData>>(todos));
-                responseBody.Status = statusData;
-                return responseBody;
-            }
+                Success = true, 
+                Code = 200, 
+                Message = "No records found." 
+            };
+            return responseBody;
         }
 
-        catch (Exception ex)
-        {
-            throw new RpcException(new Status(StatusCode.Internal, "An unexpected error occurred."), ex.Message);
-        }
+        responseBody.Data.AddRange(mapper.Map<IEnumerable<TodoData>>(todos));
+        responseBody.Status = new StatusData 
+        { 
+            Success = true, 
+            Code = 200, 
+            Message = "Record(s) found." 
+        };
+        return responseBody;
     }
 
     public override async Task<CreateTodoResponse> Create(CreateTodoRequest request, ServerCallContext context)
     {
-        CreateTodoResponse responseBody = new();
-        StatusData statusData = new() { Success = true, Code = 201, Message = "Record created successfully." };
         logger.LogInformation("Attempting to Create a Todo");
 
         try
@@ -77,106 +69,107 @@ public class TodoGrpcService(ITodoService todoService, IMapper mapper, ILogger<T
             var todo = mapper.Map<CreateTodoDto>(request);
             var created = await todoService.CreateAsync(todo, context.CancellationToken);
 
+            var responseBody = new CreateTodoResponse();
             if (created == 0)
             {
-                statusData.Code = 422;
-                statusData.Message = "Unable to create.";
-                responseBody.Status = statusData;
+                responseBody.Status = new StatusData 
+                { 
+                    Success = false, 
+                    Code = 422, 
+                    Message = "Unable to create." 
+                };
                 return responseBody;
             }
-            else
-            {
-                responseBody.Status = statusData;
-                return responseBody;
-            }
-        }
 
-        catch (AppValidationException ex)
-        {
-            responseBody.Status = ServiceHelper.CreateFailureMeta(400, ex.Errors);
+            responseBody.Status = new StatusData 
+            { 
+                Success = true, 
+                Code = 201, 
+                Message = "Record created successfully." 
+            };
             return responseBody;
         }
-
-        catch (Exception ex)
+        catch (AppValidationException ex)
         {
-            throw new RpcException(new Status(StatusCode.Internal, "An unexpected error occurred."), ex.Message);
+            logger.LogWarning(ex, "Validation error while creating todo");
+            var responseBody = new CreateTodoResponse();
+            responseBody.Status = ServiceHelper.CreateFailureMeta(400, ex.Errors);
+            return responseBody;
         }
     }
 
     public override async Task<UpdateTodoResponse> Update(UpdateTodoRequest request, ServerCallContext context)
     {
-        UpdateTodoResponse responseBody = new();
-        StatusData statusData = new() { Success = true, Code = 200, Message = "Record updated successfully." };
-        logger.LogInformation("Attempting to update a Todo");
+        logger.LogInformation("Attempting to update a Todo with Id: {Id}", request.Id);
 
         try
         {
             var todo = mapper.Map<UpdateTodoDto>(request);
             var updated = await todoService.UpdateAsync(todo, context.CancellationToken);
 
+            var responseBody = new UpdateTodoResponse();
             if (!updated)
             {
-                statusData.Code = 422;
-                statusData.Success = false;
-                statusData.Message = "Unable to update.";
-                responseBody.Status = statusData;
+                responseBody.Status = new StatusData 
+                { 
+                    Success = false, 
+                    Code = 422, 
+                    Message = "Unable to update." 
+                };
                 return responseBody;
             }
-            else
-            {  
-                responseBody.Status = statusData;
-                return responseBody;
-            }
-        }
 
-        catch (AppValidationException ex)
-        {
-            responseBody.Status = ServiceHelper.CreateFailureMeta(400, ex.Errors);
+            responseBody.Status = new StatusData 
+            { 
+                Success = true, 
+                Code = 200, 
+                Message = "Record updated successfully." 
+            };
             return responseBody;
         }
-
-        catch (Exception ex)
+        catch (AppValidationException ex)
         {
-            throw new RpcException(new Status(StatusCode.Internal, "An unexpected error occurred."), ex.Message);
+            logger.LogWarning(ex, "Validation error while updating todo with Id: {Id}", request.Id);
+            var responseBody = new UpdateTodoResponse();
+            responseBody.Status = ServiceHelper.CreateFailureMeta(400, ex.Errors);
+            return responseBody;
         }
     }
 
     public override async Task<DeleteTodoResponse> Delete(DeleteTodoRequest request, ServerCallContext context)
     {
-        DeleteTodoResponse responseBody = new();
-        StatusData statusData = new() { Success = true, Code = 200, Message = "Record deleted successfully." };
-        logger.LogInformation("Attempting to delete a Todo");
+        logger.LogInformation("Attempting to delete a Todo with Id: {Id}", request.Id);
 
         try
         {
             var success = await todoService.DeleteAsync(request.Id, context.CancellationToken);
-            statusData.Success = success;
 
+            var responseBody = new DeleteTodoResponse();
             if (!success)
             {
-                statusData.Code = 422;
-                statusData.Success = false;
-                statusData.Message = "Unable to delete.";
-                responseBody.Status = statusData;
-                return responseBody;
-            }
-            else
-            {  
-                responseBody.Status = statusData;
+                responseBody.Status = new StatusData 
+                { 
+                    Success = false, 
+                    Code = 422, 
+                    Message = "Unable to delete." 
+                };
                 return responseBody;
             }
 
-        }
-
-        catch (AppValidationException ex)
-        {
-            responseBody.Status = ServiceHelper.CreateFailureMeta(400, ex.Errors);
+            responseBody.Status = new StatusData 
+            { 
+                Success = true, 
+                Code = 200, 
+                Message = "Record deleted successfully." 
+            };
             return responseBody;
         }
-
-        catch (Exception ex)
+        catch (AppValidationException ex)
         {
-            throw new RpcException(new Status(StatusCode.Internal, "An unexpected error occurred."), ex.Message);
+            logger.LogWarning(ex, "Validation error while deleting todo with Id: {Id}", request.Id);
+            var responseBody = new DeleteTodoResponse();
+            responseBody.Status = ServiceHelper.CreateFailureMeta(400, ex.Errors);
+            return responseBody;
         }
     }
     

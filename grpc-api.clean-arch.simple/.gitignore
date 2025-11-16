@@ -273,6 +273,10 @@ ServiceFabricBackup/
 *.sqlite
 *.sqlite3
 
+# Log files
+logs/
+*.log
+
 # Business Intelligence projects
 *.rdl.data
 *.bim.layout

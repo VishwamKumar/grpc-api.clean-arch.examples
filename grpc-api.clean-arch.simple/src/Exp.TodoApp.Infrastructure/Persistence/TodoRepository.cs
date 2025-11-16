@@ -30,8 +30,18 @@ public class TodoRepository(AppDbContext dbContext) : ITodoRepository
         var exists = await dbContext.Todos.AnyAsync(x => x.Id == todo.Id, cancellationToken);
         if (!exists) return false;
 
-        dbContext.Todos.Attach(todo);
-        dbContext.Entry(todo).State = EntityState.Modified;
+        // Check if entity is already tracked
+        var trackedEntity = dbContext.Todos.Local.FirstOrDefault(e => e.Id == todo.Id);
+        if (trackedEntity != null)
+        {
+            // Update the tracked entity instead of attaching a new one
+            dbContext.Entry(trackedEntity).CurrentValues.SetValues(todo);
+        }
+        else
+        {
+            dbContext.Todos.Attach(todo);
+            dbContext.Entry(todo).State = EntityState.Modified;
+        }
 
         var result = await dbContext.SaveChangesAsync(cancellationToken);
         return result > 0;

@@ -14,6 +14,11 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"Error setting configs: {ex.Message}");
+    Log.Fatal(ex, "Application failed to start");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
 }
 

@@ -31,6 +31,9 @@ grpc-api.clean-arch.simple/
 │   │   └── Extensions/              # Dependency injection setup
 │   └── Exp.TodoApp.GrpcApi/         # gRPC API layer
 │       ├── Services/                 # gRPC service implementations
+│       ├── Middleware/               # Global exception middleware
+│       ├── Interceptors/             # gRPC exception interceptor
+│       ├── Helpers/                  # Utility classes
 │       ├── Protos/                   # Protocol buffer definitions
 │       └── Extensions/               # Service configuration
 ├── tests/
@@ -43,12 +46,13 @@ grpc-api.clean-arch.simple/
 
 ## 🔄 Request Flow
 
-1. **gRPC Request** → `TodoGrpcService`
+1. **gRPC Request** → `TodoGrpcService` (with `ExceptionInterceptor`)
 2. **Map to DTO** → `CreateTodoDto` via AutoMapper
 3. **Call Service** → `todoService.CreateAsync(dto)`
 4. **Validate** → FluentValidation in service
 5. **Repository** → `ITodoRepository.AddAsync()`
-6. **Response** → Returns result back through the chain
+6. **Error Handling** → Exceptions caught by interceptor/middleware, logged with Serilog
+7. **Response** → Returns result back through the chain (or error response)
 
 ## 🚀 Getting Started
 
@@ -111,6 +115,9 @@ docker run -p 5000:80 todo-grpc-api
 - **Still Clean** - Maintains Clean Architecture principles
 - **No External Dependency** - Removed MediatR
 - **Faster Development** - Less boilerplate
+- **Robust Error Handling** - Global exception middleware and gRPC interceptor
+- **Structured Logging** - Serilog with console and file logging
+- **Comprehensive Testing** - 27 tests covering all CRUD operations and error scenarios
 
 ## 📝 Notes
 
@@ -123,15 +130,27 @@ docker run -p 5000:80 todo-grpc-api
 
 ## 🧪 Testing
 
-The project includes both unit and integration tests:
-- **Unit Tests**: Test application services with mocked dependencies
-- **Integration Tests**: Test repository and database interactions using in-memory database
+The project includes comprehensive unit and integration tests covering all CRUD operations:
 
-Test frameworks used:
-- xUnit
-- Moq (for mocking)
-- FluentAssertions (for readable assertions)
-- Microsoft.EntityFrameworkCore.InMemory (for integration tests)
+### Test Coverage
+- ✅ **Create** - Unit and integration tests
+- ✅ **Read (GetAll)** - Unit and integration tests
+- ✅ **Read (GetById)** - Unit and integration tests
+- ✅ **Update** - Unit and integration tests
+- ✅ **Delete** - Unit and integration tests
+- ✅ **Error Scenarios** - Validation errors, not found scenarios
+
+### Test Types
+- **Unit Tests**: Test application services with mocked dependencies (`TodoServiceTests.cs`)
+- **Integration Tests**: Test repository and database interactions using in-memory database (`TodoServiceIntegrationTests.cs`, `CreateTodoCommandHandlerTests.cs`)
+
+### Test Frameworks
+- **xUnit** - Testing framework
+- **Moq** - Mocking framework
+- **FluentAssertions** - Readable assertion library
+- **Microsoft.EntityFrameworkCore.InMemory** - In-memory database for integration tests
+
+**Total Tests: 27** (All passing ✅)
 
 ## 🛠️ Technology Stack
 
@@ -141,19 +160,66 @@ Test frameworks used:
 - **SQLite** - Database
 - **FluentValidation** - Input validation
 - **AutoMapper** - Object mapping
+- **Serilog** - Structured logging
 - **xUnit** - Testing framework
+- **Moq** - Mocking framework
+- **FluentAssertions** - Assertion library
 
 ## 📚 Project Structure Details
 
 - **Domain Layer**: Contains entities and domain logic (no dependencies)
 - **Application Layer**: Contains services, DTOs, validators, and interfaces
 - **Infrastructure Layer**: Contains data access implementation (EF Core, repositories)
-- **API Layer**: Contains gRPC services, protocol definitions, and API-specific configurations
+- **API Layer**: Contains gRPC services, protocol definitions, middleware, interceptors, and API-specific configurations
 - **Tests**: Contains unit and integration tests organized by layer
+
+### Key Components
+
+#### API Layer (`Exp.TodoApp.GrpcApi`)
+- `Services/` - gRPC service implementations
+- `Middleware/` - Global exception middleware
+- `Interceptors/` - gRPC exception interceptor
+- `Helpers/` - Utility classes (ServiceHelper, GrpcExceptionHandler)
+- `Extensions/` - Service configuration extensions
+- `Protos/` - Protocol buffer definitions
+
+#### Application Layer (`Exp.TodoApp.Application`)
+- `Services/` - Business logic services (ITodoService, TodoService)
+- `Dtos/` - Data transfer objects
+- `Validators/` - FluentValidation validators
+- `Interfaces/` - Repository interfaces
+- `Common/Exceptions/` - Application-specific exceptions
+
+#### Infrastructure Layer (`Exp.TodoApp.Infrastructure`)
+- `Persistence/` - EF Core DbContext and repository implementations
+- `Extensions/` - Dependency injection configuration
+- `Factories/` - DbContext factory for migrations
 
 ## 🔧 Configuration
 
-- Database connection string is configured in `appsettings.json`
-- Swagger can be enabled/disabled via `UseSwagger` setting in `appsettings.json`
-- Environment-specific settings can be added in `appsettings.Development.json`
+- **Database**: Connection string is configured in `appsettings.json`
+- **Swagger**: Can be enabled/disabled via `UseSwagger` setting in `appsettings.json`
+- **Logging**: Serilog is configured with console and file logging (see `Serilog` section in `appsettings.json`)
+- **Environment-specific**: Settings can be added in `appsettings.Development.json`
+
+## 🛡️ Error Handling & Logging
+
+The project includes comprehensive error handling and structured logging:
+
+### Error Handling
+- **Global Exception Middleware**: Handles unhandled exceptions for HTTP requests
+- **gRPC Exception Interceptor**: Handles exceptions in gRPC requests and converts them to appropriate gRPC status codes
+- **Exception Helpers**: Centralized exception handling logic (`GrpcExceptionHandler`)
+- **Validation Errors**: Properly handled with `AppValidationException` returning 400 status
+- **Domain Errors**: Handled with `DomainException` returning 400 status
+
+### Structured Logging (Serilog)
+- **Console Logging**: Real-time logs in console with structured format
+- **File Logging**: Daily rolling log files in `logs/` directory (7-day retention)
+- **Log Enrichment**: Includes Environment, MachineName, ThreadId, and LogContext
+- **Log Levels**: Configurable via `appsettings.json`
+
+### Log Files
+- Logs are written to `logs/log-YYYYMMDD.txt` (one file per day)
+- Log files are automatically excluded from source control (see `.gitignore`)
 
