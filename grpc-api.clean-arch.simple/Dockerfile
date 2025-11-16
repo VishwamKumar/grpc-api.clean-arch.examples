@@ -1,4 +1,4 @@
-# .NET 9.0 Dockerfile
+# .NET 10.0 Dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80

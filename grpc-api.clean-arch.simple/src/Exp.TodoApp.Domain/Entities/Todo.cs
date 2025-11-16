@@ -7,7 +7,7 @@ namespace Exp.TodoApp.Domain.Entities;
 /// However, this validation is crucial for maintaining the integrity of the domain model.
 /// It ensures that the domain entities are always in a valid state, even when accessed directly.
 /// This is particularly important in scenarios where the domain model might be manipulated
-/// Purpise is to keep it cleaner, self-contained, and teaches proper DDD.
+/// Purpose is to keep it cleaner, self-contained, and teaches proper DDD.
 /// </summary>
 public class Todo
 {
@@ -17,12 +17,6 @@ public class Todo
 
     // Private constructor for EF Core
     private Todo() { }
-
-    public void SetTodoName(string todoName)
-    {
-
-        TodoName = todoName.Trim();
-    }
 
     public static Todo Create(string todoName)
     {
